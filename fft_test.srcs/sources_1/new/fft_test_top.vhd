@@ -34,10 +34,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity fft_test_top is
     port(clk: in std_logic;
          input_data: in std_logic_vector(31 downto 0);  -- data from signal to be fft'd
-    
-         x: in std_logic_vector(1 downto 0);
-         en: in std_logic;
-         led: out std_logic_vector(3 downto 0));
+         fft_output: out std_logic_vector(31 downto 0));
 end fft_test_top;
 
 architecture Behavioral of fft_test_top is
@@ -70,8 +67,6 @@ constant FWD_INV: std_logic_vector(0 downto 0) := "1";  -- 1=forward transform, 
 constant SCALE_SCH: std_logic_vector(9 downto 0) := "0000000000";  -- no scaling for now
 constant CONFIG_TDATA: std_logic_vector(15 downto 0) := "00000" & SCALE_SCH & FWD_INV;
 
-signal fft_output: std_logic_vector(31 downto 0);
-
 begin
 
 fft_block_inst: fft_block 
@@ -96,23 +91,5 @@ port map(
     event_data_in_channel_halt => open,
     event_data_out_channel_halt => open
 );
-
-process(x, en)
-    begin
-    if en = '0' then
-        led <= "0000";
-    else
-        case x is
-            when "00" =>
-                led <= "0001";
-            when "01" =>
-                led <= "0010";
-            when "10" =>
-                led <= "0100";
-            when "11" =>
-                led <= "1000";
-        end case;
-    end if;
-end process;
 
 end Behavioral;
